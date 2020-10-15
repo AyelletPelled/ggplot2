@@ -1,0 +1,542 @@
+---
+title: "Introduction to GGplot2"
+author: "Ayellet Pelled"
+date: "10/8/2020"
+output: rmdformats::readthedown
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+
+# <img src="logo.png" style="width:20%
+```
+
+![](C:\Users\ayell\desktop\logo.png){width=10%}
+
+***
+
+
+## The Grammar of Graphics
+***
+
+<div class = "row">
+  
+<div class = "col-md-8">
+GGplot2 is one of the core packages under the tidyverse package. </br> 
+The "gg" stands for "**Grammar of Graphics**", a book by *Leland Wilkinson* that offers tools to concicley describe the components of a graphic, in statistics and computing.
+</br>
+
+GGplot2 logic stems from this idea, that you can build every graph from the same few components: a data frame, visual marks (geoms) representing the data, and a coordinate system.</br>
+
+It is more flexible and versatile than the graphs produced by the base package, and once you get a grip of the syntax and function arguments, it becomes easy to create beautiful and elaborate visualizations.</br>
+
+As *Hadley Wickham* explained: "You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details." 
+
+</div>
+  
+<div class = "col-md-3">
+
+![](C:\Users\ayell\desktop\gog.jpg){width=100%}
+</div>
+</div>
+
+
+
+## Grammatical elements of ggplot2
+***
+
+A key feature of ggplot2 is that it allows to layer graphical elements on top of each other. You can imagine a stack of layers, each adding onto the layers before it.
+
+* **Data** - the data frame we want to use for our plot
+* **Aesthetics (aes)** - the scales we want to map our data onto 
+* **Geometrics (geom)** - the geometrical shapes representing our data
+* **Themes** - the appearance of the non-data aspects of the plot
+* **Statistics** - representations of the date
+* **Coordinates**/**Scales** - the range and limits our plot
+* **Facets** - the layout of multiple plots and subplots
+
+The first three elements: <code>data</code>, aesthetics (<code>aes</code>), and geometrics (<code>geom</code>), are the basic elements. </br>
+We must define them in the <code>ggplot</code> function in order to produce a meaningful plot.
+
+The remaining elements are "optional", that is, they are set to a default. This means we are not required to define them when we plot, though typically we would want to adjust them, to make our graphs better fit our needs. 
+
+In this presentation I will focus on the first three elements, and the most commonly used geoms.
+
+Lets get to work!
+
+
+# Installing packages
+***
+
+Begin by installing and loading the <code>tidyverse</code> package, which includes ggplot2, among other usefull packages such as <code>dplyr</code> and <code>tidyr</code> which are used for manipulating data prior to plotting. 
+
+You only need to install a package once, but you will need to "load" it every time you restart a session
+
+```{3}
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+If you solely want to install the ggplot2 package you can use a similar line of code, but you will most likely use dplyr, so you may as well install tideyverse which includes both (and more)
+
+``` {r}
+# install.packages("ggplot2")
+library(ggplot2)
+```
+
+## Our Data
+***
+
+For this exercise we will use <code>diamonds</code> from the dataset package, and the <code>gapminder</code> dataset from the gapminder package. Both are available on r. 
+
+``` {r}
+#loading the datasets package
+library(datasets)
+library(gapminder)
+
+#importing the datafiles into our workspace
+data("diamonds")
+data(gapminder)
+```
+
+We will start working with the <code>diamonds</code> data. 
+
+The first step should always be to examine the dataset. What variable we have? What datatype is each variable? How many observations are included?
+
+You can use the structure function <code>str()</code>, or the summary function <code>summary()</code> if you want more details on each variable.
+
+```{r, ddata}
+# presents the first 10 rows of data
+diamonds
+```
+
+```{r, diamonds structure}
+#  structure of diamonds dataset
+str(diamonds)
+```
+
+```{r, diamonds summary}
+# summary of diamonds variables
+summary(diamonds)
+```
+
+If only want the variable names for easier access, you can simply list the column of the dataset using <code>colnames()</code>.
+
+```{r, column names}
+colnames(diamonds)
+```
+
+Now let's continue exploring the data by plotting it with ggplot2
+
+
+# The ggplot2 syntax
+***
+
+The first line of code in ggplot2 requires us to input the **data frame** we intend to use, and the **aesthetics** we want to map our data on. This line typically includes all the data needed for creating the plot. The function synatx is writtern as: <code>ggplot(data, aes())</code>
+
+For instance, to plot the price of diamonds based on their carat we need to set "diamonds" as the <code>data</code>, and map "carat" and "price" onto the <code>x</code> and <code>y</code> aesthetics.
+
+
+The function can be written either as: <code>ggplot(data = diamonds, aes(x = carat, y = price))</code>  </br> or simply as: <code>ggplot(diamonds, aes(carat, price))</code>
+
+``` {r}
+ggplot(data = diamonds, aes(x = carat, y = price))
+```
+
+This creates the base layer of our plot, which includes the dimensions  we defined for the aesthetics. In order to present the observations, we need to add geometric layers. For every layer we add, we need to place a "**+**" sign.  
+
+For instance, to present a trend line of the average price by carat, we can add a <code>geom_smooth()</code> layer. This geom creates a regression line with a confidence intervals. 
+
+```{r}
+  ggplot(diamonds, aes(carat, price)) +
+   geom_smooth()
+```
+
+However, a regression line is not very telling about the observations. In this instance, it would make more sense to create a scatterplot in order to see the spread of the observations. We can do this by adding a <code>geom_point()</code> layer. 
+
+# Scatterplots
+
+```{r}
+  ggplot(diamonds, aes(carat, price)) +
+    geom_point()
+```
+
+Many of the observations are overlapping, making it difficult to see the actual distribution. To help remedy overplotting, we can adjust the transparency of the points by reducing the <code>alpha</code> and also increase the <code>size</code> of the points inside the <code>geom_point</code> layer.
+
+```{r}
+  ggplot(diamonds, aes(carat, price)) +
+    geom_point(alpha = 0.4, size = 2)
+```
+
+This looks better, but it is still difficult to make insights from this plot. We can add another aesthetic mapping to deferantiate between diamonds with different cuts.
+In this example we will map "cut" onto the <code>color</code> aesthetic in the <code>ggplot</code> line,
+
+```{r}
+  ggplot(diamonds, aes(carat, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2)
+```
+
+We could change the aestehtic maping inside the geom layer, rather then the ggplot line.We might choose to do so if we want to assign different aesthetic mappings to different geom layers, or if we are plotting values from different data frames.
+
+In the example above, if we move the <code>aes(color = cut)</code> into the <code>geom_point()</code> layer, we will produce the same graph.
+
+```{r}
+  ggplot(diamonds, aes(carat, price)) +
+    geom_point(aes(color = cut), alpha = 0.4, size = 2)
+```
+
+Finaly, notice the difference between aesthetic mappings, which represent scales, and atributes which represent fixed values. 
+
+Instead of assigning a fixed size, we could map size onto a variable
+```{r}
+  ggplot(diamonds, aes(carat, price, color = cut)) +
+    geom_point(alpha = 0.3, aes(size = clarity))
+```
+
+**Stacking Layers** As mentioned previously, <code>ggplot2</code> enables us to add multiple element layers on top of each other. 
+
+We need to add another "**+**" sign at the end of each row to indicate there is another line. 
+
+When adding <code>geom</code> layers, each new  layer will appear on top of the previous layers. This means the order of the <code>geom</code> layers matters.
+
+
+```{r}
+  ggplot(diamonds, aes(carat, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2) +
+    geom_smooth(se = FALSE)
+```
+
+Notice that the aesthetic mappings defined in the first line are automatically adopted by all the geom layers. Aesthetics and attributes added to an individual geom layer affect only that layer, and they can override aesthetic mappings from the main <code>ggplot()</code> line.  
+
+```{r}
+  ggplot(diamonds, aes(carat, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2) +
+    geom_smooth(color = "deeppink3")
+```
+
+```{r}
+  ggplot(diamonds, aes(carat, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2) +
+    geom_smooth(aes(linetype = cut), size = 2, se = FALSE)
+```
+
+
+We can add multiple geom layers of the same type
+```{r}
+# additng two geom_smooth() layers
+  ggplot(diamonds, aes(carat, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2) +
+    geom_smooth(color = "deeppink3", se = FALSE) +
+    geom_smooth(color = "blue", method = lm) + 
+    ylim(0,20000)
+```
+
+Each <code>geom</code> type has multiple arguments which are set to to default values, which we can easily change based on our needs. For instance, <code>geom_point</code> can take arguments relating to <code> x, y, alpha, color, fill, shape, and weight </code>. 
+
+In the previous examples we changed the <code>alpha</code> and <code>size</code> attributes of the points.
+
+
+[For a cheat sheet with ggplot2 geom argumentsby rStudio visit this link.](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+
+## Improving the plot
+
+Before we continue, let's make make our lives a bit easier. Instead of typing the function over and over again, we can assign the function to an object and simply add layers to that object. 
+
+```{r}
+## assigning a ggplot2 function to an object
+dd <- ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) + geom_point(alpha = 0.4, size = 2)
+
+# same as:   dd <- ggplot(diamonds, aes(carat,price, color = cut)) + geom_point(alpha = 0.4, size = 2)
+```
+
+Now we can add layers and adjustments to "**dd**" which already containts our predefined <code> ggplot() + geom_point() </code>.
+
+### Vertical & Horisontal Lines
+
+We can add lines to indicate the median and mean of carat. To add vertical and horizontal lines we use <code>geom_vline()</code> and <code>geom_hline()</code> correspondingly.
+
+
+```{r}
+  dd +
+    geom_vline (xintercept = 0.7, linetype = "dashed",color = "#b22222") + 
+    geom_vline (xintercept = 0.7979, linetype = "dashed",color = "turquoise4")
+```
+
+We can also add tags to the lines with <code>geom_tex()</code> to indicate what they represent. 
+
+```{r}
+  dd +
+    geom_vline (xintercept = 0.7, linetype = "dashed",color = "#b22222") + 
+    geom_vline (xintercept = 0.7979, linetype = "dashed",color = "turquoise4") + 
+    geom_text(aes(x=0.7, label="carat median", y=14000), vjust = -1, color= "#b22222", angle=90, size=3) +
+    geom_text(aes(x=0.7979, label="carat mean", y=14000), vjust = 1, color= "turquoise4", angle=90, size=3)
+```
+
+We can see that much of the data is condenced on the left side of the plot. We can handle this by adjusting the data or, better yet, adjusting the scale.
+
+
+### Adjusting the data
+Using <code>dplyr</code> functions, we can filter out observations greater than 3 carats. We'll create a new dataset by saving the filtered data into an object called "*smallD*"
+
+```{r}
+smallD <- diamonds %>% 
+  filter(carat <=3 )
+```
+
+
+We then  plot the same aesthetics using the new data frame "*smallD*"
+```{r}
+  ggplot(data = smallD, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.4, size = 2)
+```
+
+
+### Adusting the scales
+
+Instead of filtering  out extreme observations, we can adjust the x axis, either by changing its limits with <code>xlim()</code>, or by LOGing the values of the x scale with <code>scale_x_log10()</code>
+
+**Limiting the scale** deletes the points outside the limit range
+```{r}
+dd +
+  xlim(c(0, 3))
+```
+Limiting the x scale for the <code>diamond</code> dataset created a graph that is identical to the one we created with the <code>smallD</code> dataframe.
+
+***
+
+**Loging the scale** keeps all the data points, but stretches the axis exponentially
+```{r}
+dd +
+  scale_x_log10()
+```
+LOGing is useful when the data is very skewed, as in the case of the <code>gapminder</code> data which I will go back to at the end of the presentation. For the <code>diamond</code> dataset, I would probably choose to limit the axis scale rather than LOG the scale. 
+
+## Facets & Themes
+***
+
+We can further exmaine diferences by arranging the data into subplots.
+with <code>facet_grid()</code> and <code>facet_wrap()</code> 
+
+```{r}
+dd +
+  facet_grid(. ~ cut)
+```
+
+```{r}
+dd +
+  facet_grid(cut ~ .) + 
+  theme(legend.position = "none")
+```
+
+```{r}
+dd +
+  facet_wrap(~cut, ncol = 2) +
+    theme(legend.position = "none") +
+    theme_light()
+```
+
+```{r}
+dd +
+  facet_wrap(~clarity) + 
+  theme_dark()
+```
+
+
+We focused on many examples with scatterplots (code>geom_point()</code>), but the logic of function arguemnts and layers is aplicable to the other geom types.
+
+# Bar Charts
+
+The height of bars <code>geom_bar()</code> represents the number of cases in each group. Thus it only takes an "**x**" aesthetic.
+
+The height of bars <code>geom_col()</code> represents other other values in the data, which is why it also requires a "**y**" aesthetic.
+
+Alternativley, you could change the <code>stat</code> argument setting inside geom bar to identity in the following manner <code>geom_bar(stat = "identity")</code>, which will enable it to take on a "**y**" aesthetic as well.
+_
+
+```{r}
+ggplot(diamonds, aes(x = cut)) +
+  geom_bar()
+```
+
+Asignng the color aesthetic would change the color of the outlines rather then the fill of the bars. to change the color of the bars we use the <code>fill</code> aesthetic. 
+```{r}
+ggplot(diamonds, aes(x = cut, fill = cut)) +
+  geom_bar()
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = carat, fill = cut)) +
+  geom_bar(stat = "identity")
+```
+
+
+Assigning the fill to another variable, splits each bar into subgroups
+```{r}
+ggplot(diamonds, aes(x = cut, fill = clarity)) +
+  geom_bar()
+```
+
+The default position is set to <code>"stack"</code>, which is why the cut levels are stacked upon each other. The other options are <code>position = "fill"</code> which fills each bar to represent 100%. The third option is <code>position = "dodge"</code> which places the groups next to eachother
+
+```{r}
+ggplot(diamonds, aes(x = cut, fill = clarity)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+ggplot(diamonds, aes(x = cut, fill = clarity)) +
+  geom_bar(position = "dodge") 
+```
+
+
+```{r}
+ggplot(diamonds, aes(x = cut, fill = clarity)) + 
+  geom_bar(position = "dodge") + 
+  facet_grid(. ~ clarity) +
+  theme(axis.text.x = element_text(angle = 90)) 
+```
+
+Finaly, you can also change the direction of the bar by fliping it 90 degrees with <code>coord_flip()</code>, or create a circular center with <code>coord_polar()</code>
+
+```{r}
+ggplot(diamonds, aes(x = color, fill = color)) +
+  geom_bar() + 
+  coord_flip() + 
+  theme(legend.position = "none")
+```
+
+
+
+```{r}
+ggplot(diamonds, aes(x = color, fill = color)) +
+  geom_bar() + 
+  coord_polar() + 
+  theme(legend.position = "none") 
+```
+
+# Histograms
+Histograms are used for contiuus x variables, as opposed to bar charts which are used for catagrocial variables. 
+
+<center> Coming soon </center>
+
+
+
+
+# Boxplots
+```{r}
+ggplot(diamonds, aes(color, price, fill = color)) +
+  geom_boxplot() +
+  labs(title = "My amazing diamnd boxplot chart", x = "Diamond Color Grade", y = "Price")
+```
+
+```{r}
+ggplot(diamonds, aes(color, price, fill = cut)) +
+  geom_boxplot() +
+  labs(title = "Diamond price by color grade and cut", x = "Diamond Color Grade", y = "Price")
+```
+
+
+# Line graphs
+
+Line graphs produced by <code>geom_line</code> are suitable for longitudinal data in which we desire to show variance over time, or between different treatments. For the <code>diamond</code> data a line graph will look like a hot mess. 
+
+```{r}
+ggplot(diamonds, aes(carat, price, color = clarity)) + 
+  geom_line()
+```
+
+To better demostrate the line geom, We will move to the <code>gapminder</code> data which contains information on life expectancy of countries at different points of time
+
+## The Gapminder data
+***
+
+```{r}
+str(gapminder)
+```
+
+```{r}
+colnames(gapminder)
+```
+
+I created a new dataframe via <code>dplyr>/code> functions by grouping continenet and year, and adding a new variable representing the average life expectency.
+
+```{r}
+yearContinent <- gapminder %>%
+  group_by(year, continent) %>%
+  summarize(totalPop = sum(as.numeric(pop)),AverageLifeExp = mean(lifeExp))
+
+
+yearContinent
+```
+
+
+```{r}
+ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) + 
+geom_line()
+```
+
+
+```{r}
+ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) + 
+  geom_line() +
+  geom_point()
+```
+
+```{r}
+
+ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) + 
+  geom_smooth(color = "#000000", linetype = "dashed") +
+  geom_line() +
+  geom_point(aes(size = totalPop))
+```
+
+Reminder That LOGing scales helps when the data is very skewed scales and LOG.
+So lets put everythin together.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  facet_wrap(~ year, ncol = 3)
+```
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  facet_wrap(~ year, ncol = 3)
+```
+
+```{r}
+gm <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
+  geom_point() +
+  scale_x_log10()
+```
+
+
+
+```{r}
+gm +
+  facet_grid(continent ~ year) + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  theme(legend.position = "none") +
+  labs(title = "Life Expectancy by GDP, Continent and Year", x = "GDP", y = "Life Expectancy")
+
+```
+
+
+<center>**Thank you!**</center>
+***
+
+
+# Tutorials
+**Continue learning and practicing ggplot2 on your own:**
+***
+
+1. [Data Visualization - in R for Data Science](https://r4ds.had.co.nz/data-visualisation.html) - Hadley Wickham’s e-book
+2. [The Complete ggplot2 Tutorial](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) - by Selva Prabhakaran
+3. [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) - Great for asking questions from the community
+4. [Data Camp course](https://learn.datacamp.com/) - first lesson of each course is free
+5. [Interactive charts](https://plotly.com/ggplot2/) - convert your ggplot2 figures into interactive ones powered by plotly.js
