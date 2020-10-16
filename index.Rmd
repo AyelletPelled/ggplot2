@@ -9,9 +9,9 @@ output: rmdformats::readthedown
 library(ggplot2)
 library(dplyr)
 knitr::opts_chunk$set(echo = TRUE)
-
-# <img src="logo.png" style="width:20%
 ```
+
+<img src="logo.png" style="width:10%">
 
 ![](C:\Users\ayell\desktop\logo.png){width=10%}
 
@@ -24,19 +24,21 @@ knitr::opts_chunk$set(echo = TRUE)
 <div class = "row">
   
 <div class = "col-md-8">
-GGplot2 is one of the core packages under the tidyverse package. </br> 
-The "gg" stands for "**Grammar of Graphics**", a book by *Leland Wilkinson* that offers tools to concicley describe the components of a graphic, in statistics and computing.
+GGplot2 is one of the core packages under the tidyverse package, which is collection of R packages designed for data science. </br> 
+
+The "gg" stands for "**Grammar of Graphics**", a book by *Leland Wilkinson* that offers tools to concicley describe the components of a graphic in statistics and computing.
 </br>
 
 GGplot2 logic stems from this idea, that you can build every graph from the same few components: a data frame, visual marks (geoms) representing the data, and a coordinate system.</br>
 
-It is more flexible and versatile than the graphs produced by the base package, and once you get a grip of the syntax and function arguments, it becomes easy to create beautiful and elaborate visualizations.</br>
+It is more flexible and versatile than the graphs produced by R's base package, and once you get a grip of the syntax and function arguments, it becomes easy to create beautiful and elaborate visualizations.</br>
 
 As *Hadley Wickham* explained: "You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details." 
 
 </div>
   
 <div class = "col-md-3">
+
 
 ![](C:\Users\ayell\desktop\gog.jpg){width=100%}
 </div>
@@ -60,9 +62,9 @@ A key feature of ggplot2 is that it allows to layer graphical elements on top of
 The first three elements: <code>data</code>, aesthetics (<code>aes</code>), and geometrics (<code>geom</code>), are the basic elements. </br>
 We must define them in the <code>ggplot</code> function in order to produce a meaningful plot.
 
-The remaining elements are "optional", that is, they are set to a default. This means we are not required to define them when we plot, though typically we would want to adjust them, to make our graphs better fit our needs. 
+The remaining elements are "optional", that is, they are set to a default. This means we are not required to define them when we plot, though typically we would want to adjust them to make sure our graphs better fit our needs. 
 
-In this presentation I will focus on the first three elements, and the most commonly used geoms.
+In this presentation I will focus mainly on the first three elements, and specifically on the most commonly used geoms.
 
 Lets get to work!
 
@@ -320,6 +322,10 @@ LOGing is useful when the data is very skewed, as in the case of the <code>gapmi
 We can further exmaine diferences by arranging the data into subplots.
 with <code>facet_grid()</code> and <code>facet_wrap()</code> 
 
+<code>facet_grid()</code> creates
+
+One of the benifit of creating sub plots with facets is that the scales are paralel across plots. 
+
 ```{r}
 dd +
   facet_grid(. ~ cut)
@@ -344,8 +350,26 @@ dd +
   theme_dark()
 ```
 
+Now lets see what happens when we use <code>geom_point()</code> with a categotical X. 
 
-We focused on many examples with scatterplots (code>geom_point()</code>), but the logic of function arguemnts and layers is aplicable to the other geom types.
+```{r}
+ggplot(diamonds, aes(cut, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2)
+```
+There is over plotting bevause all the observations are alligned on the same x value. 
+GGplot2 enables us to "jitter" the points in order to overcome overplotting. 
+We do this either  by adding a <code>geom_jitter()</code> layer instead of <code>geom_point()</code> layer, or alternativley, we can add a **jitter** argument into the <code>geom_point()</code> line as follows:
+
+<code>geom_point(position = "jitter")</code>
+
+```{r}
+ggplot(diamonds, aes(cut, price, color = cut)) +
+    geom_point(alpha = 0.4, size = 2, position = "jitter")
+```
+
+
+We focused on many examples with scatterplots (<code>geom_point()</code>), but the logic of the function arguemnts and layers is aplicable to the other geom types as well.
+
 
 # Bar Charts
 
@@ -364,16 +388,25 @@ ggplot(diamonds, aes(x = cut)) +
 Asignng the color aesthetic would change the color of the outlines rather then the fill of the bars. to change the color of the bars we use the <code>fill</code> aesthetic. 
 ```{r}
 ggplot(diamonds, aes(x = cut, fill = cut)) +
-  geom_bar()
+  geom_bar() + 
+  geom_text(stat='count', aes(label=..count..), vjust=-1) +
+  ylim(0, 25000)
 ```
+
+
+```{r geom_bar - identity}
+ggplot(diamonds, aes(x = cut, y = carat, fill = cut)) +
+  geom_bar(stat = "identity") 
+```
+
 
 ```{r}
 ggplot(diamonds, aes(x = cut, y = carat, fill = cut)) +
-  geom_bar(stat = "identity")
+  geom_col()
 ```
 
 
-Assigning the fill to another variable, splits each bar into subgroups
+By assigning the fill to another variable, we split each bar into subgroups.
 ```{r}
 ggplot(diamonds, aes(x = cut, fill = clarity)) +
   geom_bar()
@@ -414,13 +447,17 @@ ggplot(diamonds, aes(x = color, fill = color)) +
 ggplot(diamonds, aes(x = color, fill = color)) +
   geom_bar() + 
   coord_polar() + 
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 ```
 
 # Histograms
 Histograms are used for contiuus x variables, as opposed to bar charts which are used for catagrocial variables. 
 
-<center> Coming soon </center>
+
+
+<center> *Coming soon* </center>
+
+
 
 
 
@@ -448,7 +485,11 @@ ggplot(diamonds, aes(carat, price, color = clarity)) +
   geom_line()
 ```
 
-To better demostrate the line geom, We will move to the <code>gapminder</code> data which contains information on life expectancy of countries at different points of time
+
+To better demostrate the line geom, We will move to the <code>gapminder</code> data which contains information on life expectancy of countries over the past seven decades.
+
+
+
 
 ## The Gapminder data
 ***
@@ -458,10 +499,41 @@ str(gapminder)
 ```
 
 ```{r}
+summary(gapminder)
+```
+
+```{r}
 colnames(gapminder)
 ```
 
-I created a new dataframe via <code>dplyr>/code> functions by grouping continenet and year, and adding a new variable representing the average life expectency.
+
+
+Lets see what happens when we plot life expectancy by year using <code>geom_line()</code>.  
+
+```{r}
+ggplot(gapminder, aes(year, lifeExp)) + 
+  geom_line() 
+```
+This graph is not very telling because it is basically going through all the data points on each year.
+We can add a color aesthetic to create subgroups for each continent. Let's check if that helps.
+
+```{r}
+ggplot(gapminder, aes(year, lifeExp, color = continent)) + 
+  geom_line() 
+```
+It still looks like a mess because the lines are still passing through all the data points of each year. What we want is lines that represent the average of each group, similar to the trend line produced by <code>geom_smoot()</code>. 
+
+
+```{r}
+# adding a geom_smooth() layer
+ggplot(gapminder, aes(year, lifeExp, color = continent)) + 
+  geom_line() +
+  geom_smooth()
+```
+
+So basically, we need to create another variable that represents the average for each group by year. This is where <code>dplyr</code> becomes important and useful. We can easily create new dataframe from the <code>gapminder</code> data via <code>dplyr</code> functions to add the desired values. We first **group_by** continenet and year, and then we add **summarize** variables which calculate the total population and the average life expectency.
+
+I saved this dataframe in an object called "**yearContinent**"
 
 ```{r}
 yearContinent <- gapminder %>%
@@ -469,15 +541,19 @@ yearContinent <- gapminder %>%
   summarize(totalPop = sum(as.numeric(pop)),AverageLifeExp = mean(lifeExp))
 
 
+# display first 10 rows of the new dataframe we created
+
 yearContinent
 ```
 
+Now when we add a <code>geom_line()</code>, the lines represent the average for each continent
 
 ```{r}
-ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) + 
-geom_line()
+ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) +
+  geom_line()
 ```
 
+We can also add a <code>geom_point()</code> on top of the lines to so that average value for each year is visually clearer.
 
 ```{r}
 ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) + 
@@ -485,16 +561,37 @@ ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) +
   geom_point()
 ```
 
+
 ```{r}
 
 ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) + 
-  geom_smooth(color = "#000000", linetype = "dashed") +
-  geom_line() +
-  geom_point(aes(size = totalPop))
+  geom_line(aes(linetype = continent)) +
+  geom_point(aes(size = totalPop)) +
+  geom_hline (linetype = "dashed",color = "#000055", yintercept = 59.47) +
+  geom_text(aes(x=2000, label="global average life Exp", y=61), color= "#000055", size=3)
+
 ```
 
-Reminder That LOGing scales helps when the data is very skewed scales and LOG.
-So lets put everythin together.
+
+# Final notes
+
+Now lets go back to and see what the data looks like when <code>geom_point()</code> to create a scatther plot by year
+
+```{r}
+ggplot(gapminder, aes(year, lifeExp, color = continent)) + 
+  geom_point()
+```
+
+This happened because year is a categorical variable. Remember the jitter option for <code>geom_point()</code> which "jitters" the points to avoid overplotting?
+
+```{r}
+ggplot(gapminder, aes(year, lifeExp, color = continent)) + 
+  geom_point(position = "jitter")
+
+```
+
+We can also facet the data by year to see variations by year.
+
 
 ```{r}
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
@@ -502,12 +599,20 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
   facet_wrap(~ year, ncol = 3)
 ```
 
+remeber that LOGing scales helps when the data is very skewed.This data is much more skewed than the diamond data. 
+
 ```{r}
+# loging the x scale
+
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
   geom_point() +
   scale_x_log10() +
   facet_wrap(~ year, ncol = 3)
 ```
+
+**Now lets put everything we learned together.**
+
+First we'll assign the main function and scale log to an object named "**gm**" (short for gapminder)
 
 ```{r}
 gm <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
@@ -515,28 +620,31 @@ gm <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
   scale_x_log10()
 ```
 
-
-
+Now we will plot the object and add faceting, themes, and labels.
 ```{r}
 gm +
   facet_grid(continent ~ year) + 
   theme(axis.text.x = element_text(angle = 90)) +
   theme(legend.position = "none") +
   labs(title = "Life Expectancy by GDP, Continent and Year", x = "GDP", y = "Life Expectancy")
-
 ```
 
 
-<center>**Thank you!**</center>
+This is all for now
+
+<center><font size = "5" color = "magenta">**Thank you!**</font></center>
+
 ***
 
 
 # Tutorials
-**Continue learning and practicing ggplot2 on your own:**
+
+**Continue learning and practicing ggplot2 on your own:** 
+
 ***
 
-1. [Data Visualization - in R for Data Science](https://r4ds.had.co.nz/data-visualisation.html) - Hadley Wickham’s e-book
-2. [The Complete ggplot2 Tutorial](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) - by Selva Prabhakaran
-3. [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) - Great for asking questions from the community
-4. [Data Camp course](https://learn.datacamp.com/) - first lesson of each course is free
-5. [Interactive charts](https://plotly.com/ggplot2/) - convert your ggplot2 figures into interactive ones powered by plotly.js
+1. [Data Visualization - in R for Data Science](https://r4ds.had.co.nz/data-visualisation.html) - <font color = "black">**in Hadley Wickham’s e-book**</font>
+2. [The Complete ggplot2 Tutorial](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) - <font color = "black"> - **by Selva Prabhakaran**</font>
+3. [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) - <font color = "black">**Great for asking questions from the community**</font>
+4. [Data Camp course](https://learn.datacamp.com/) - <font color = "black">**first lesson of each course is free**</font>
+5. [Interactive charts](https://plotly.com/ggplot2/) - <font color = "black">**convert your ggplot2 figures into interactive ones powered by plotly.js**</font>
