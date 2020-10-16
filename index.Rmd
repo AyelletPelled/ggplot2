@@ -3,6 +3,7 @@ title: "Introduction to GGplot2"
 author: "Ayellet Pelled"
 date: "10/8/2020"
 output: rmdformats::readthedown
+
 ---
 
 ```{r setup, include=FALSE}
@@ -23,11 +24,11 @@ knitr::opts_chunk$set(echo = TRUE)
 <div class = "row">
   
 <div class = "col-md-8">
-GGplot2 is one of the core packages under the tidyverse package, which is collection of R packages designed for data science. </br> 
+GGplot2 is one of the core packages under the <code>tidyverse</code> package, which is collection of R packages designed for data science. </br> 
 
-The "gg" stands for "**Grammar of Graphics**", a book by *Leland Wilkinson* that offers tools to concicley describe the components of a graphic in statistics and computing.
+The "gg" stands for "**Grammar of Graphics**", based on a book by *Leland Wilkinson* that aggregates tools to concisley describe the components of a graphic in statistics and computing.
 </br>
-
+   
 GGplot2 logic stems from this idea, that you can build every graph from the same few components: a data frame, visual marks (geoms) representing the data, and a coordinate system.</br>
 
 It is more flexible and versatile than the graphs produced by R's base package, and once you get a grip of the syntax and function arguments, it becomes easy to create beautiful and elaborate visualizations.</br>
@@ -71,7 +72,7 @@ Lets get to work!
 # Installing packages
 ***
 
-Begin by installing and loading the <code>tidyverse</code> package, which includes ggplot2, among other usefull packages such as <code>dplyr</code> and <code>tidyr</code> which are used for manipulating data prior to plotting. 
+Begin by installing and loading the <code>tidyverse</code> package, which includes ggplot2, among other useful packages such as <code>dplyr</code> and <code>tidyr</code> which are used for manipulating data prior to plotting. 
 
 You only need to install a package once, but you will need to "load" it every time you restart a session
 
@@ -80,7 +81,7 @@ You only need to install a package once, but you will need to "load" it every ti
 library(tidyverse)
 ```
 
-If you solely want to install the ggplot2 package you can use a similar line of code, but you will most likely use dplyr, so you may as well install tideyverse which includes both (and more)
+If you solely want to install the ggplot2 package you can use a similar line of code, but you will most likely use dplyr, so you may as well install <code>tidyverse</code>, which includes both (and more)
 
 ``` {r}
 # install.packages("ggplot2")
@@ -135,7 +136,9 @@ Now let's continue exploring the data by plotting it with ggplot2
 # The ggplot2 syntax
 ***
 
-The first line of code in ggplot2 requires us to input the **data frame** we intend to use, and the **aesthetics** we want to map our data on. This line typically includes all the data needed for creating the plot. The function synatx is writtern as: <code>ggplot(data, aes())</code>
+The first line of code in ggplot2 requires us to input the **data frame** we intend to use, and the **aesthetics** scales onto which we want to map our data. This function line typically includes all the data needed for creating the plot. 
+
+The function syntax is written as: <code>ggplot(data, aes())</code>
 
 For instance, to plot the price of diamonds based on their carat we need to set "diamonds" as the <code>data</code>, and map "carat" and "price" onto the <code>x</code> and <code>y</code> aesthetics.
 
@@ -146,9 +149,9 @@ The function can be written either as: <code>ggplot(data = diamonds, aes(x = car
 ggplot(data = diamonds, aes(x = carat, y = price))
 ```
 
-This creates the base layer of our plot, which includes the dimensions  we defined for the aesthetics. In order to present the observations, we need to add geometric layers. For every layer we add, we need to place a "**+**" sign.  
+This created the base layer of our plot, which includes the dimensions we defined for the aesthetics. In order to visually present the observations, we need to add geometric layers. for every layer we add, we need to place a "**+**" sign at the end of the previous line of code.  
 
-For instance, to present a trend line of the average price by carat, we can add a <code>geom_smooth()</code> layer. This geom creates a regression line with a confidence intervals. 
+For instance, to present a trend line of the average price by carat, we can add a <code>geom_smooth()</code> layer. This geom creates a regression line including the confidence intervals. 
 
 ```{r}
   ggplot(diamonds, aes(carat, price)) +
@@ -171,7 +174,7 @@ Many of the observations are overlapping, making it difficult to see the actual 
     geom_point(alpha = 0.4, size = 2)
 ```
 
-This looks better, but it is still difficult to make insights from this plot. We can add another aesthetic mapping to deferantiate between diamonds with different cuts.
+This looks better, but it is still difficult to make insights from this plot. We can add another aesthetic mapping to differentiate between diamonds with different cuts.
 In this example we will map "cut" onto the <code>color</code> aesthetic in the <code>ggplot</code> line,
 
 ```{r}
@@ -179,7 +182,7 @@ In this example we will map "cut" onto the <code>color</code> aesthetic in the <
     geom_point(alpha = 0.4, size = 2)
 ```
 
-We could change the aestehtic maping inside the geom layer, rather then the ggplot line.We might choose to do so if we want to assign different aesthetic mappings to different geom layers, or if we are plotting values from different data frames.
+We could change the aesthetic mapping inside the geom layer, rather than the ggplot() line. We might choose to do so if we want to assign different aesthetic mappings to different geom layers, or if we are plotting values from different data frames.
 
 In the example above, if we move the <code>aes(color = cut)</code> into the <code>geom_point()</code> layer, we will produce the same graph.
 
@@ -188,7 +191,7 @@ In the example above, if we move the <code>aes(color = cut)</code> into the <cod
     geom_point(aes(color = cut), alpha = 0.4, size = 2)
 ```
 
-Finaly, notice the difference between aesthetic mappings, which represent scales, and atributes which represent fixed values. 
+Finally, notice the difference between aesthetic mappings, which represent scales, and atributes which represent fixed values. 
 
 Instead of assigning a fixed size, we could map size onto a variable
 ```{r}
@@ -200,8 +203,7 @@ Instead of assigning a fixed size, we could map size onto a variable
 
 We need to add another "**+**" sign at the end of each row to indicate there is another line. 
 
-When adding <code>geom</code> layers, each new  layer will appear on top of the previous layers. This means the order of the <code>geom</code> layers matters.
-
+When adding <code>geom</code> layers, each new layer will appear on top of the previous layers. This means that the order of the <code>geom</code> layers matters.
 
 ```{r}
   ggplot(diamonds, aes(carat, price, color = cut)) +
@@ -239,7 +241,7 @@ Each <code>geom</code> type has multiple arguments which are set to to default v
 In the previous examples we changed the <code>alpha</code> and <code>size</code> attributes of the points.
 
 
-[For a cheat sheet with ggplot2 geom argumentsby rStudio visit this link.](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+[For a cheat sheet with ggplot2 geom arguments by rStudio, visit this link].(https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
 
 ## Improving the plot
@@ -253,9 +255,9 @@ dd <- ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) + geom_poi
 # same as:   dd <- ggplot(diamonds, aes(carat,price, color = cut)) + geom_point(alpha = 0.4, size = 2)
 ```
 
-Now we can add layers and adjustments to "**dd**" which already containts our predefined <code> ggplot() + geom_point() </code>.
+Now we can add layers and adjustments to "**dd**" which already contains our predefined <code> ggplot() + geom_point() </code>.
 
-### Vertical & Horisontal Lines
+### Vertical & Horizontal Lines
 
 We can add lines to indicate the median and mean of carat. To add vertical and horizontal lines we use <code>geom_vline()</code> and <code>geom_hline()</code> correspondingly.
 
@@ -276,7 +278,7 @@ We can also add tags to the lines with <code>geom_tex()</code> to indicate what 
     geom_text(aes(x=0.7979, label="carat mean", y=14000), vjust = 1, color= "turquoise4", angle=90, size=3)
 ```
 
-We can see that much of the data is condenced on the left side of the plot. We can handle this by adjusting the data or, better yet, adjusting the scale.
+We can see that much of the data is condensed on the left side of the plot. We can handle this by adjusting the data or, better yet, adjusting the scale.
 
 
 ### Adjusting the data
@@ -288,14 +290,14 @@ smallD <- diamonds %>%
 ```
 
 
-We then  plot the same aesthetics using the new data frame "*smallD*"
+We then plot the same aesthetics using the new data frame "*smallD*"
 ```{r}
   ggplot(data = smallD, aes(x = carat, y = price, color = cut)) +
   geom_point(alpha = 0.4, size = 2)
 ```
 
 
-### Adusting the scales
+### Adjusting the scales
 
 Instead of filtering  out extreme observations, we can adjust the x axis, either by changing its limits with <code>xlim()</code>, or by LOGing the values of the x scale with <code>scale_x_log10()</code>
 
@@ -304,11 +306,11 @@ Instead of filtering  out extreme observations, we can adjust the x axis, either
 dd +
   xlim(c(0, 3))
 ```
-Limiting the x scale for the <code>diamond</code> dataset created a graph that is identical to the one we created with the <code>smallD</code> dataframe.
+Limiting the x scale for the <code>diamond</code> dataset created a graph that is identical to the one we created with the <code>smallD</code> data frame.
 
 ***
 
-**Loging the scale** keeps all the data points, but stretches the axis exponentially
+**LOGing the scale** keeps all the data points, but stretches the axis exponentially
 ```{r}
 dd +
   scale_x_log10()
@@ -318,12 +320,12 @@ LOGing is useful when the data is very skewed, as in the case of the <code>gapmi
 ## Facets & Themes
 ***
 
-We can further exmaine diferences by arranging the data into subplots.
+We can further examine differences by arranging the data into subplots.
 with <code>facet_grid()</code> and <code>facet_wrap()</code> 
 
 <code>facet_grid()</code> creates
 
-One of the benifit of creating sub plots with facets is that the scales are paralel across plots. 
+One benefit of creating sub plots with facets is that the scales are parallel across plots. 
 
 ```{r}
 dd +
@@ -349,15 +351,15 @@ dd +
   theme_dark()
 ```
 
-Now lets see what happens when we use <code>geom_point()</code> with a categotical X. 
+Now lets see what happens when we use <code>geom_point()</code> with a categorical X. 
 
 ```{r}
 ggplot(diamonds, aes(cut, price, color = cut)) +
     geom_point(alpha = 0.4, size = 2)
 ```
-There is over plotting bevause all the observations are alligned on the same x value. 
+There is over plotting because all the observations are aligned on the same x value. 
 GGplot2 enables us to "jitter" the points in order to overcome overplotting. 
-We do this either  by adding a <code>geom_jitter()</code> layer instead of <code>geom_point()</code> layer, or alternativley, we can add a **jitter** argument into the <code>geom_point()</code> line as follows:
+We do this either  by adding a <code>geom_jitter()</code> layer instead of <code>geom_point()</code> layer, or alternatively, we can add a **jitter** argument into the <code>geom_point()</code> line as follows:
 
 <code>geom_point(position = "jitter")</code>
 
@@ -367,7 +369,7 @@ ggplot(diamonds, aes(cut, price, color = cut)) +
 ```
 
 
-We focused on many examples with scatterplots (<code>geom_point()</code>), but the logic of the function arguemnts and layers is aplicable to the other geom types as well.
+We focused on many examples with scatterplots (<code>geom_point()</code>), but the logic of the function arguments is applicable  to the other geom types as well.
 
 
 # Bar Charts
@@ -376,7 +378,7 @@ The height of bars <code>geom_bar()</code> represents the number of cases in eac
 
 The height of bars <code>geom_col()</code> represents other other values in the data, which is why it also requires a "**y**" aesthetic.
 
-Alternativley, you could change the <code>stat</code> argument setting inside geom bar to identity in the following manner <code>geom_bar(stat = "identity")</code>, which will enable it to take on a "**y**" aesthetic as well.
+Alternatively, you could change the <code>stat</code> argument setting inside geom bar to identity in the following manner <code>geom_bar(stat = "identity")</code>, which will enable it to take on a "**y**" aesthetic as well.
 _
 
 ```{r}
@@ -384,7 +386,7 @@ ggplot(diamonds, aes(x = cut)) +
   geom_bar()
 ```
 
-Asignng the color aesthetic would change the color of the outlines rather then the fill of the bars. to change the color of the bars we use the <code>fill</code> aesthetic. 
+Assigning  the color aesthetic would change the color of the outlines rather than the fill of the bars. to change the color of the bars we use the <code>fill</code> aesthetic. 
 ```{r}
 ggplot(diamonds, aes(x = cut, fill = cut)) +
   geom_bar() + 
@@ -411,7 +413,7 @@ ggplot(diamonds, aes(x = cut, fill = clarity)) +
   geom_bar()
 ```
 
-The default position is set to <code>"stack"</code>, which is why the cut levels are stacked upon each other. The other options are <code>position = "fill"</code> which fills each bar to represent 100%. The third option is <code>position = "dodge"</code> which places the groups next to eachother
+The default position is set to <code>"stack"</code>, which is why the cut levels are stacked upon each other. The other options are <code>position = "fill"</code> which fills each bar to represent 100%. The third option is <code>position = "dodge"</code> which places the groups next to each other.
 
 ```{r}
 ggplot(diamonds, aes(x = cut, fill = clarity)) +
@@ -431,7 +433,7 @@ ggplot(diamonds, aes(x = cut, fill = clarity)) +
   theme(axis.text.x = element_text(angle = 90)) 
 ```
 
-Finaly, you can also change the direction of the bar by fliping it 90 degrees with <code>coord_flip()</code>, or create a circular center with <code>coord_polar()</code>
+Finally, you can also change the direction of the bar by flipping it 90 degrees with <code>coord_flip()</code>, or create a circular center with <code>coord_polar()</code>
 
 ```{r}
 ggplot(diamonds, aes(x = color, fill = color)) +
@@ -450,11 +452,11 @@ ggplot(diamonds, aes(x = color, fill = color)) +
 ```
 
 # Histograms
-Histograms are used for contiuus x variables, as opposed to bar charts which are used for catagrocial variables. 
+
+Histograms are used for continuous x variables, as opposed to bar charts which are used for categorical variables.  
 
 
-
-<center> *Coming soon* </center>
+<center> *This swction will be updated soon* </center>
 
 
 
@@ -485,7 +487,7 @@ ggplot(diamonds, aes(carat, price, color = clarity)) +
 ```
 
 
-To better demostrate the line geom, We will move to the <code>gapminder</code> data which contains information on life expectancy of countries over the past seven decades.
+To better demonstrate the <code>geom_line()</code>, we will move to the <code>gapminder</code> data which contains information on life expectancy of countries over the past seven decades.
 
 
 
@@ -530,9 +532,11 @@ ggplot(gapminder, aes(year, lifeExp, color = continent)) +
   geom_smooth()
 ```
 
-So basically, we need to create another variable that represents the average for each group by year. This is where <code>dplyr</code> becomes important and useful. We can easily create new dataframe from the <code>gapminder</code> data via <code>dplyr</code> functions to add the desired values. We first **group_by** continenet and year, and then we add **summarize** variables which calculate the total population and the average life expectency.
+Basically, we need to create another variable that represents the average for each group by year. This is where <code>dplyr</code> becomes important and useful. 
 
-I saved this dataframe in an object called "**yearContinent**"
+We can easily create new data frame from the <code>gapminder</code> data via <code>dplyr</code> functions to add the desired values. We first **group_by** continent and year, and then we **summarize** variables to calculate the total population and the average life expectancy for each continent.
+
+I saved this data frame in an object called "**yearContinent**"
 
 ```{r}
 yearContinent <- gapminder %>%
@@ -574,7 +578,7 @@ ggplot(yearContinent, aes(year, AverageLifeExp, color = continent)) +
 
 # Final notes
 
-Now lets go back to and see what the data looks like when <code>geom_point()</code> to create a scatther plot by year
+Now lets go back to and see what the data looks like when <code>geom_point()</code> to create a scatter plot by year
 
 ```{r}
 ggplot(gapminder, aes(year, lifeExp, color = continent)) + 
@@ -598,10 +602,10 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
   facet_wrap(~ year, ncol = 3)
 ```
 
-remeber that LOGing scales helps when the data is very skewed.This data is much more skewed than the diamond data. 
+remeber that LOGing scales helps when the data is very skewed. This data is much more skewed than the diamond data we were using earlier. 
 
 ```{r}
-# loging the x scale
+# LOGing the x scale
 
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
   geom_point() +
@@ -611,7 +615,7 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
 
 **Now lets put everything we learned together.**
 
-First we'll assign the main function and scale log to an object named "**gm**" (short for gapminder)
+First, we'll assign the main ggplot() function and scale log to an object named "**gm**" (short for gapminder)
 
 ```{r}
 gm <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
