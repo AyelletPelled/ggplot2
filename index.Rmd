@@ -11,7 +11,6 @@ library(dplyr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<img src="logo.png" style="width:10%">
 
 ![](C:\Users\ayell\desktop\logo.png){width=10%}
 
@@ -55,8 +54,8 @@ A key feature of ggplot2 is that it allows to layer graphical elements on top of
 * **Aesthetics (aes)** - the scales we want to map our data onto 
 * **Geometrics (geom)** - the geometrical shapes representing our data
 * **Themes** - the appearance of the non-data aspects of the plot
-* **Statistics** - representations of the date
-* **Coordinates**/**Scales** - the range and limits our plot
+* **Statistics** - data representations to aid understanding
+* **Coordinates**/**Scales** - the range and limits of our plot
 * **Facets** - the layout of multiple plots and subplots
 
 The first three elements: <code>data</code>, aesthetics (<code>aes</code>), and geometrics (<code>geom</code>), are the basic elements. </br>
@@ -620,7 +619,7 @@ gm <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,color = continent)) +
   scale_x_log10()
 ```
 
-Now we will plot the object and add faceting, themes, and labels.
+Now we will plot the functions assigned to **gm** and add facets, themes, and labels.
 ```{r}
 gm +
   facet_grid(continent ~ year) + 
@@ -630,11 +629,15 @@ gm +
 ```
 
 
-This is all for now
+**This is all for now**
 
-<center><font size = "5" color = "magenta">**Thank you!**</font></center>
+
+
+<center><font size = "6" color = "#ad1553">**Thank you!**</font></center>
 
 ***
+
+
 
 
 # Tutorials
@@ -643,8 +646,14 @@ This is all for now
 
 ***
 
-1. [Data Visualization - in R for Data Science](https://r4ds.had.co.nz/data-visualisation.html) - <font color = "black">**in Hadley Wickham’s e-book**</font>
-2. [The Complete ggplot2 Tutorial](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) - <font color = "black"> - **by Selva Prabhakaran**</font>
-3. [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) - <font color = "black">**Great for asking questions from the community**</font>
-4. [Data Camp course](https://learn.datacamp.com/) - <font color = "black">**first lesson of each course is free**</font>
-5. [Interactive charts](https://plotly.com/ggplot2/) - <font color = "black">**convert your ggplot2 figures into interactive ones powered by plotly.js**</font>
+1. [Data Visualization - in "R for Data" Science](https://r4ds.had.co.nz/data-visualisation.html) - <font color = "black">**Hadley Wickham’s e-book guide to R**</font>
+2. [The Complete ggplot2 Tutorial](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) - <font color = "black"> - **Tutorial by Selva Prabhakaran**</font>
+3. [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) - <font color = "black">**Great forum for asking questions from the community**</font>
+4. [Data Camp course](https://learn.datacamp.com/) - <font color = "black">**First lesson of each course is free**</font>
+5. [Interactive charts](https://plotly.com/ggplot2/) - <font color = "black">**Convert your ggplot2 figures into interactive ones powered by plotly.js**</font>
+
+
+
+
+
+
